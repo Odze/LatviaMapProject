@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+    <!-- leaflet css-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <input type="text" id="searchInput" placeholder="Search...">
+    <div id="buttonsContainer"></div>
+</body>
+
+<!-- leaflet js-->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    var homeDataContainer = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+    var buttonsContainer = document.getElementById('buttonsContainer');
+    var map = L.map('map');
+    var searchInput = document.getElementById('searchInput');
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    homeDataContainer.farthestDirectionalCentroids.forEach(function (centroid) {
+        L.marker([centroid.ddN, centroid.ddE]).addTo(map)
+            .bindPopup('Name: ' + centroid.name + '<br>Code: ' + centroid.code)
+            .openPopup();
+    });
+
+    map.setView([56.896903, 24.24932], 7);
+
+    searchInput.addEventListener('input', function () {
+        var searchText = searchInput.value.trim().toLowerCase();
+        var filteredCentroids = homeDataContainer.centroids.filter(function (centroid) {
+            return centroid.name.toLowerCase().includes(searchText);
+        });
+
+        var startingLetterCentroids = filteredCentroids.filter(function (centroid) { 
+            return centroid.name.toLowerCase().startsWith(searchText);
+        });
+
+        var remainingCentroids = filteredCentroids.filter(function (centroid) {
+            return !centroid.name.toLowerCase().startsWith(searchText);
+        });
+
+        var combinedCentroids = startingLetterCentroids.concat(remainingCentroids);
+        buttonsContainer.innerHTML = '';
+
+        if (searchText != ""){
+            combinedCentroids.forEach(function (centroid) {
+                var button = document.createElement('button');
+                button.textContent = centroid.name;
+                button.addEventListener('click', function () {
+                    map.setView([centroid.ddN, centroid.ddE], 13);
+                    searchInput.value = '';
+                    buttonsContainer.innerHTML = '';
+                });
+                buttonsContainer.appendChild(button);
+            });
+        }
+    });
+</script>

@@ -1,0 +1,35 @@
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+        position: relative;
+        min-height: 100%;
+    }
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#map {
+    width: 60%;
+    height: 60vh;
+    float: right;
+    vertical-align: auto;
+}
+
+#searchInput {
+    float: left;
+    max-height: 200px;
+    width: 500px;
+    flex-direction: column;
+    display: flex;
+}
+
+#buttonsContainer {
+    float: left;
+    overflow-y: scroll;
+    max-height: 200px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+}
