@@ -22,3 +22,12 @@ Additionally, the project provides a search feature that allows users to search 
 - CSS
 - JavaScript
 - Leaflet (JavaScript library for interactive maps)
+
+## Usage
+
+1. Clone the repository to your local machine.
+2. Open the project in a development environment (e.g., Visual Studio).
+3. Build and run the project.
+4. The map will display the four farthest inhabited places in Latvia.
+5. Use the search bar to search for specific inhabited places in Latvia.
+6. The map will update to show the matching locations based on your search input.
